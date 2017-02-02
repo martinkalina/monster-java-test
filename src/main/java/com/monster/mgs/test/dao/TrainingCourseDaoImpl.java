@@ -3,7 +3,6 @@ package com.monster.mgs.test.dao;
 import com.monster.mgs.test.model.TrainingCourse;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.IdentifierEqExpression;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

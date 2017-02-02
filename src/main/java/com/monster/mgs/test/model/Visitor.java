@@ -1,6 +1,7 @@
 package com.monster.mgs.test.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Visitor {
@@ -44,4 +45,17 @@ public class Visitor {
   public void setEmailAddress(String emailAddress) {
     this.emailAddress = emailAddress;
   }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Visitor visitor = (Visitor) o;
+        return Objects.equals(id, visitor.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

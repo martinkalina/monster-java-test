@@ -4,16 +4,15 @@
   <h1>Training Course Feedback Form</h1>
   <p>Please help us to improve our class by completing this form.</p>
 
-  <form:form action="next2">
+  <form:form action="submit2">
     <dl>
       <dt>Favorite Section:</dt>
-      <dd><select></select></dd>
-      <form:input path="visitor.firstName" />
+      <dd><form:select path="favouriteSection" items="${sections}" itemLabel="name" itemValue="id"/></dd>
       <dt>Please rate the training:</dt>
-      <dd><input type="radio" />1 <input type="radio" />2 <input type="radio" />3 <input type="radio" />4 <input type="radio" />5</dd>
-      
+      <dd><form:radiobuttons path="rating" items="${ratings}" /></dd>
+
       <dt>Please share with us your comments on how we can improve this class for future:</dt>
-      <dd><textarea rows="6" cols="40"></textarea></dd>
+      <dd><form:textarea path="comment" rows="6" cols="40"/></dd>
     </dl>
     <input type="submit" name="submit" value="&lt; Back" />
     <input type="submit" name="submit" value="Continue &gt;" />

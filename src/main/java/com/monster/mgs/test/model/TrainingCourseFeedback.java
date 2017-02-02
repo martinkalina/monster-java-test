@@ -1,11 +1,10 @@
 package com.monster.mgs.test.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
+@Entity(name = "TRAINING_COURSE_FEEDBACK")
 public class TrainingCourseFeedback {
 
     @Id
@@ -14,9 +13,24 @@ public class TrainingCourseFeedback {
     private Long id;
     private Date date;
     private String comment;
+    private int rating;
 
+    @ManyToOne
+    private TrainingCourseSection favouriteSection;
+
+    @ManyToOne
     private TrainingCourse course;
+
+    @ManyToOne
     private Visitor visitor = new Visitor();
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
     public Visitor getVisitor() {
         return visitor;
@@ -57,5 +71,26 @@ public class TrainingCourseFeedback {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public TrainingCourseSection getFavouriteSection() {
+        return favouriteSection;
+    }
+
+    public void setFavouriteSection(TrainingCourseSection favouriteSection) {
+        this.favouriteSection = favouriteSection;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrainingCourseFeedback that = (TrainingCourseFeedback) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

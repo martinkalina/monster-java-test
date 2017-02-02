@@ -4,7 +4,7 @@
 <h1>Training Course Feedback Form</h1>
 <p>Please help us to improve our class by completing this form.</p>
 
-<form:form action="next1">
+<form:form action="submit1">
     <dl>
         <dt>First Name:</dt>
 

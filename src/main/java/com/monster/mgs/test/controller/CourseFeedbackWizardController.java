@@ -1,69 +1,94 @@
 package com.monster.mgs.test.controller;
 
+import com.monster.mgs.test.dao.CourseSectionDao;
 import com.monster.mgs.test.dao.TrainingCourseDao;
 import com.monster.mgs.test.model.TrainingCourse;
 import com.monster.mgs.test.model.TrainingCourseFeedback;
+import com.monster.mgs.test.model.TrainingCourseSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 @Controller
 
 @SessionAttributes({"feedback"})
-public class CourseFeedbackWizardController  {
+public class CourseFeedbackWizardController {
 
-    public static final String COMMAND = "command";
+    private static final String COMMAND = "command";
+
     @Autowired
     private TrainingCourseDao courseRepository;
 
-    @ModelAttribute("feedback")
-    @RequestMapping("/init")
-    public ModelAndView init(@ModelAttribute("feedback") TrainingCourseFeedback feedback){
-        final ModelAndView mv = new ModelAndView("step1", COMMAND, feedback);
-        mv.addObject("courses", courseRepository.getAll());
-        return mv;
-    }
+    @Autowired
+    private CourseSectionDao sectionRepository;
+
+
     @ModelAttribute("feedback")
     public TrainingCourseFeedback createFeedback() {
         final TrainingCourseFeedback feedback = new TrainingCourseFeedback();
-        feedback.getVisitor().setFirstName("Martin");
+        feedback.setCourse(courseRepository.getAll().iterator().next());
         return feedback;
     }
 
-    @RequestMapping("/next1")
-    public ModelAndView submit1(@ModelAttribute("feedback") TrainingCourseFeedback feedback, @RequestParam() String submit) {
+    @RequestMapping("/init")
+    public ModelAndView init(@ModelAttribute("feedback") TrainingCourseFeedback feedback) {
+        return prepare1(feedback);
+    }
+
+    private ModelAndView prepare1(TrainingCourseFeedback feedback) {
+        return createModelAndViewFor(feedback, "step1")
+                .addObject("courses", courseRepository.getAll());
+    }
+
+    @RequestMapping("/submit1")
+    public ModelAndView submit1(@ModelAttribute("feedback") TrainingCourseFeedback feedback, @RequestParam() String submit, SessionStatus sessionStatus) {
         if (isBack(submit)) {
-            return new ModelAndView("index");
+            sessionStatus.setComplete();
+            return createModelAndViewFor(feedback, "index");
         }
 
-        return new ModelAndView("step2", COMMAND, feedback);
+        return prepare2(feedback);
+    }
+
+    private ModelAndView prepare2(TrainingCourseFeedback feedback) {
+        return createModelAndViewFor(feedback, "step2")
+                .addObject("sections", sectionRepository.findByCourseId(feedback.getCourse().getId()))
+                .addObject("ratings", new Integer[]{1, 2, 3, 4, 5});
+    }
+
+    @RequestMapping("/submit2")
+    public ModelAndView submit2(@ModelAttribute("feedback") TrainingCourseFeedback feedback, @RequestParam() String submit) {
+        if (isBack(submit)) {
+            return prepare1(feedback);
+        }
+
+        return createModelAndViewFor(feedback, "step3");
+    }
+
+    @RequestMapping("/submit3")
+    public ModelAndView submit3(@ModelAttribute("feedback") TrainingCourseFeedback feedback, @RequestParam() String submit) {
+        if (isBack(submit)) {
+            return prepare2(feedback);
+        }
+
+        return createModelAndViewFor(feedback, "step4");
+    }
+
+    private ModelAndView createModelAndViewFor(@ModelAttribute("feedback") TrainingCourseFeedback feedback, String step) {
+        return new ModelAndView(step, COMMAND, feedback);
     }
 
     private boolean isBack(@RequestParam() String submit) {
         return submit.equals("< Back");
-    }
-
-    @RequestMapping("/next2")
-    public ModelAndView next2(@ModelAttribute("feedback") TrainingCourseFeedback feedback, @RequestParam() String submit){
-        if (isBack(submit)){
-            return new ModelAndView("step1", COMMAND, feedback);
-        }
-
-        return new ModelAndView("step3", COMMAND, feedback);
-    }
-
-    @RequestMapping("/next3")
-    public String next3(ModelMap model){
-        return "list";
     }
 
     @InitBinder
@@ -72,27 +97,36 @@ public class CourseFeedbackWizardController  {
         sdf.setLenient(true);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
 
-        binder.registerCustomEditor(TrainingCourse.class, new PropertyEditorSupport(){
-            @Override
-            public Object getSource() {
-                return super.getSource();
-            }
-
-            @Override
-            public void setSource(Object source) {
-                super.setSource(source);
-            }
-
-            @Override
-            public String getAsText() {
-                if (getValue() == null) return null;
-                return String.valueOf(((TrainingCourse)getValue()).getId());
-            }
-
+        binder.registerCustomEditor(TrainingCourse.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
                 TrainingCourse course = courseRepository.get(Long.valueOf(text));
                 setValue(course);
+            }
+
+            @Override
+            public String getAsText() {
+                final TrainingCourse course = (TrainingCourse) getValue();
+                if (course == null) {
+                    return null;
+                }
+                return course.getId().toString();
+            }
+        });
+        binder.registerCustomEditor(TrainingCourseSection.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                TrainingCourseSection course = sectionRepository.get(Long.valueOf(text));
+                setValue(course);
+            }
+
+            @Override
+            public String getAsText() {
+                final TrainingCourseSection section = (TrainingCourseSection) getValue();
+                if (section == null) {
+                    return null;
+                }
+                return section.getId().toString();
             }
         });
     }

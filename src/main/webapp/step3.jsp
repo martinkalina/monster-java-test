@@ -31,12 +31,10 @@
     <dd></dd>
   </dl>
   
-  <form action="step2.jsp" style="display: inline">
-    <input type="submit" value="&lt; Back" />
+  <form action="/submit3" style="display: inline">
+    <input type="submit" name="submit" value="&lt; Back" />
+    <input type="submit" name="submit" value="Continue &gt;" />
   </form>
   
-  <form action="index.jsp" style="display: inline">
-    <input type="submit" value="Send Feedback" style="font-weight: bold" />
-  </form>
 </body>
 </html>
