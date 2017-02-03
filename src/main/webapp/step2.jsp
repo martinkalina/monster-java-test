@@ -1,10 +1,11 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 <body>
   <h1>Training Course Feedback Form</h1>
   <p>Please help us to improve our class by completing this form.</p>
 
-  <form:form action="submit2">
+  <form:form action="submit2"  commandName="feedback">
     <dl>
       <dt>Favorite Section:</dt>
       <dd><form:select path="favoriteSection" items="${sections}" itemLabel="name" itemValue="id"/></dd>

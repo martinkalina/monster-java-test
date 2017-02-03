@@ -1,6 +1,12 @@
 package com.monster.mgs.test.model;
 
+import com.monster.mgs.test.controller.CourseFeedbackWizardController;
+import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
@@ -8,24 +14,28 @@ import java.util.Objects;
 public class TrainingCourseFeedback {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "TRAINING_COURSE_FEEDBACK_ID")
     private Long id;
+    @NotNull
+    @DateTimeFormat(pattern = CourseFeedbackWizardController.DATE_PATTERN)
     @Column(name = "TRAINING_COURSE_DATE")
     private Date date;
     private String comment;
-    private int rating;
+    @Range(min = 1, max = 5)
+    private int rating = 1;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="FAVORITE_SECTION_ID")
+    @JoinColumn(name = "FAVORITE_SECTION_ID")
     private TrainingCourseSection favoriteSection;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name="TRAINING_COURSE_ID")
+    @JoinColumn(name = "TRAINING_COURSE_ID")
     private TrainingCourse course;
 
+    @Valid
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name="VISITOR_ID")
+    @JoinColumn(name = "VISITOR_ID")
     private Visitor visitor = new Visitor();
 
     public int getRating() {

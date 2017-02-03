@@ -8,15 +8,19 @@ import com.monster.mgs.test.model.TrainingCourseSection;
 import com.monster.mgs.test.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -26,7 +30,7 @@ import java.util.Date;
 @SessionAttributes({"feedback"})
 public class CourseFeedbackWizardController {
 
-    private static final String COMMAND = "command";
+    public static final String DATE_PATTERN = "dd.MM.yyyy";
 
     @Autowired
     private CourseDao courseDao;
@@ -39,6 +43,7 @@ public class CourseFeedbackWizardController {
 
 
     @ModelAttribute("feedback")
+    @Valid
     public TrainingCourseFeedback createFeedback() {
         return new TrainingCourseFeedback();
     }
@@ -54,13 +59,19 @@ public class CourseFeedbackWizardController {
     }
 
     @RequestMapping("/submit1")
-    public ModelAndView submit1(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
+    public ModelAndView submit1(@Valid @ModelAttribute("feedback") TrainingCourseFeedback feedback,
+                                BindingResult bindingResult,
                                 @RequestParam() String submit,
-                                SessionStatus sessionStatus) {
+                                SessionStatus sessionStatus
+                                ) {
         if (isBack(submit)) {
             sessionStatus.setComplete();
             return createModelAndViewFor(feedback, "index");
         }
+        if (bindingResult.hasErrors()){
+            return prepare1(feedback);
+        }
+
 
         return prepare2(feedback);
     }
@@ -73,7 +84,8 @@ public class CourseFeedbackWizardController {
 
     @RequestMapping("/submit2")
     public ModelAndView submit2(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
-                                @RequestParam() String submit) {
+                                @RequestParam() String submit,
+                                BindingResult bindingResult) {
         if (isBack(submit)) {
             return prepare1(feedback);
         }
@@ -96,7 +108,7 @@ public class CourseFeedbackWizardController {
     }
 
     private ModelAndView createModelAndViewFor(@ModelAttribute("feedback") TrainingCourseFeedback feedback, String step) {
-        return new ModelAndView(step, COMMAND, feedback);
+        return new ModelAndView(step, "feedback", feedback);
     }
 
     private boolean isBack(@RequestParam() String submit) {
@@ -105,7 +117,7 @@ public class CourseFeedbackWizardController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
         sdf.setLenient(true);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
 

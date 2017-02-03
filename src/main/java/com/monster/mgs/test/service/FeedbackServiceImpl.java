@@ -28,7 +28,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (existingVisitor != null) {
             existingVisitor.setFirstName(visitor.getFirstName());
             existingVisitor.setLastName(visitor.getLastName());
-//            visitorDao.update(existingVisitor);
             feedback.setVisitor(existingVisitor);
         }
         feedbackDao.create(feedback);

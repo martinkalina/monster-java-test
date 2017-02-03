@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 <body>
@@ -5,7 +6,7 @@
   <p>Please help us to improve our class by completing this form.</p>
   
   <h2>Summary page</h2>
-  <form:form action="submit3"   >
+  <form:form action="submit3"  commandName="feedback"  >
   <dl>
     <dt>First Name:</dt>
     <dd><form:input disabled="true" path="visitor.firstName"/></dd>

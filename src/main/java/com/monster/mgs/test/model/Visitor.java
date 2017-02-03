@@ -1,6 +1,12 @@
 package com.monster.mgs.test.model;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -10,8 +16,12 @@ public class Visitor {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "VISITOR_ID")
     private Long id;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
+    @Email
+    @NotBlank
     private String emailAddress;
 
     public Long getId() {
@@ -21,6 +31,7 @@ public class Visitor {
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public String getFirstName() {
         return firstName;
