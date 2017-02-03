@@ -1,14 +1,14 @@
 package com.monster.mgs.test.controller;
 
-import com.monster.mgs.test.dao.CourseSectionDao;
-import com.monster.mgs.test.dao.TrainingCourseDao;
+import com.monster.mgs.test.dao.FeedbackDao;
+import com.monster.mgs.test.dao.SectionDao;
+import com.monster.mgs.test.dao.CourseDao;
 import com.monster.mgs.test.model.TrainingCourse;
 import com.monster.mgs.test.model.TrainingCourseFeedback;
 import com.monster.mgs.test.model.TrainingCourseSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
@@ -26,17 +26,17 @@ public class CourseFeedbackWizardController {
     private static final String COMMAND = "command";
 
     @Autowired
-    private TrainingCourseDao courseRepository;
+    private CourseDao courseDao;
 
     @Autowired
-    private CourseSectionDao sectionRepository;
+    private SectionDao sectionDao;
 
+    @Autowired
+    private FeedbackDao feedbackDao;
 
     @ModelAttribute("feedback")
     public TrainingCourseFeedback createFeedback() {
-        final TrainingCourseFeedback feedback = new TrainingCourseFeedback();
-        feedback.setCourse(courseRepository.getAll().iterator().next());
-        return feedback;
+        return new TrainingCourseFeedback();
     }
 
     @RequestMapping("/init")
@@ -46,11 +46,13 @@ public class CourseFeedbackWizardController {
 
     private ModelAndView prepare1(TrainingCourseFeedback feedback) {
         return createModelAndViewFor(feedback, "step1")
-                .addObject("courses", courseRepository.getAll());
+                .addObject("courses", courseDao.findAll());
     }
 
     @RequestMapping("/submit1")
-    public ModelAndView submit1(@ModelAttribute("feedback") TrainingCourseFeedback feedback, @RequestParam() String submit, SessionStatus sessionStatus) {
+    public ModelAndView submit1(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
+                                @RequestParam() String submit,
+                                SessionStatus sessionStatus) {
         if (isBack(submit)) {
             sessionStatus.setComplete();
             return createModelAndViewFor(feedback, "index");
@@ -61,12 +63,13 @@ public class CourseFeedbackWizardController {
 
     private ModelAndView prepare2(TrainingCourseFeedback feedback) {
         return createModelAndViewFor(feedback, "step2")
-                .addObject("sections", sectionRepository.findByCourseId(feedback.getCourse().getId()))
+                .addObject("sections", sectionDao.findByCourseId(feedback.getCourse().getId()))
                 .addObject("ratings", new Integer[]{1, 2, 3, 4, 5});
     }
 
     @RequestMapping("/submit2")
-    public ModelAndView submit2(@ModelAttribute("feedback") TrainingCourseFeedback feedback, @RequestParam() String submit) {
+    public ModelAndView submit2(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
+                                @RequestParam() String submit) {
         if (isBack(submit)) {
             return prepare1(feedback);
         }
@@ -75,12 +78,16 @@ public class CourseFeedbackWizardController {
     }
 
     @RequestMapping("/submit3")
-    public ModelAndView submit3(@ModelAttribute("feedback") TrainingCourseFeedback feedback, @RequestParam() String submit) {
+    public ModelAndView submit3(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
+                                @RequestParam() String submit,
+                                SessionStatus sessionStatus) {
         if (isBack(submit)) {
             return prepare2(feedback);
         }
+        // send
 
-        return createModelAndViewFor(feedback, "step4");
+        sessionStatus.setComplete();
+        return createModelAndViewFor(feedback, "index");
     }
 
     private ModelAndView createModelAndViewFor(@ModelAttribute("feedback") TrainingCourseFeedback feedback, String step) {
@@ -100,7 +107,7 @@ public class CourseFeedbackWizardController {
         binder.registerCustomEditor(TrainingCourse.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
-                TrainingCourse course = courseRepository.get(Long.valueOf(text));
+                TrainingCourse course = courseDao.findById(Long.valueOf(text));
                 setValue(course);
             }
 
@@ -116,7 +123,7 @@ public class CourseFeedbackWizardController {
         binder.registerCustomEditor(TrainingCourseSection.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
-                TrainingCourseSection course = sectionRepository.get(Long.valueOf(text));
+                TrainingCourseSection course = sectionDao.findById(Long.valueOf(text));
                 setValue(course);
             }
 

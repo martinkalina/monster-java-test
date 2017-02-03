@@ -11,17 +11,21 @@ public class TrainingCourseFeedback {
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name = "TRAINING_COURSE_FEEDBACK_ID")
     private Long id;
+    @Column(name = "TRAINING_COURSE_DATE")
     private Date date;
     private String comment;
     private int rating;
 
     @ManyToOne
-    private TrainingCourseSection favouriteSection;
+    @JoinColumn(name="FAVORITE_SECTION_ID")
+    private TrainingCourseSection favoriteSection;
 
-    @ManyToOne
+    @ManyToOne()
+    @JoinColumn(name="TRAINING_COURSE_ID")
     private TrainingCourse course;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="VISITOR_ID")
     private Visitor visitor = new Visitor();
 
     public int getRating() {
@@ -73,12 +77,12 @@ public class TrainingCourseFeedback {
         this.comment = comment;
     }
 
-    public TrainingCourseSection getFavouriteSection() {
-        return favouriteSection;
+    public TrainingCourseSection getFavoriteSection() {
+        return favoriteSection;
     }
 
-    public void setFavouriteSection(TrainingCourseSection favouriteSection) {
-        this.favouriteSection = favouriteSection;
+    public void setFavoriteSection(TrainingCourseSection favoriteSection) {
+        this.favoriteSection = favoriteSection;
     }
 
     @Override

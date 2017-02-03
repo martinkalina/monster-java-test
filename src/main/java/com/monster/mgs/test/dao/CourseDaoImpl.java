@@ -13,18 +13,18 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class TrainingCourseDaoImpl implements TrainingCourseDao {
+public class CourseDaoImpl implements CourseDao {
 
     @Autowired()
     private SessionFactory sessionFactory;
 
 
-    public Collection<TrainingCourse> getAll() {
+    public Collection<TrainingCourse> findAll() {
         Session session = this.sessionFactory.getCurrentSession();
-        return (List<TrainingCourse>) session.createCriteria(TrainingCourse.class).list();
+        return session.createCriteria(TrainingCourse.class).list();
     }
 
-    public TrainingCourse get(Long id) {
+    public TrainingCourse findById(Long id) {
         Session session = this.sessionFactory.getCurrentSession();
         return (TrainingCourse) session.createCriteria(TrainingCourse.class).add(Restrictions.idEq(id)).uniqueResult();
     }

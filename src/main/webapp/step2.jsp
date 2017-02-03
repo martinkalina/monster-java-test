@@ -7,7 +7,7 @@
   <form:form action="submit2">
     <dl>
       <dt>Favorite Section:</dt>
-      <dd><form:select path="favouriteSection" items="${sections}" itemLabel="name" itemValue="id"/></dd>
+      <dd><form:select path="favoriteSection" items="${sections}" itemLabel="name" itemValue="id"/></dd>
       <dt>Please rate the training:</dt>
       <dd><form:radiobuttons path="rating" items="${ratings}" /></dd>
 

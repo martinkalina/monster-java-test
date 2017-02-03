@@ -5,36 +5,36 @@
   <p>Please help us to improve our class by completing this form.</p>
   
   <h2>Summary page</h2>
+  <form:form action="submit3"   >
   <dl>
     <dt>First Name:</dt>
-    <dd></dd>
-    
+    <dd><form:input disabled="true" path="visitor.firstName"/></dd>
+
     <dt>Last Name:</dt>
-    <dd></dd>
-    
+    <dd><form:input disabled="true" path="visitor.lastName"/></dd>
+
     <dt>Email Address:</dt>
-    <dd></dd>
+    <dd><form:input disabled="true" path="visitor.emailAddress"/></dd>
     
     <dt>Training Course:</dt>
-    <dd></dd>
+    <dd><form:input disabled="true" path="course.name"/></dd>
     
     <dt>Training Course Date:</dt>
-    <dd></dd>
+    <dd><form:input disabled="true" path="date"/></dd>
     
     <dt>Favorite Section:</dt>
-    <dd></dd>
+    <dd><form:input disabled="true" path="favoriteSection.name"/></dd>
     
     <dt>Rating:</dt>
-    <dd></dd>
+    <dd><form:input disabled="true" path="rating"/></dd>
     
     <dt>Comments:</dt>
-    <dd></dd>
+    <dd><form:input disabled="true" path="comment"/></dd>
   </dl>
-  
-  <form action="/submit3" style="display: inline">
     <input type="submit" name="submit" value="&lt; Back" />
-    <input type="submit" name="submit" value="Continue &gt;" />
-  </form>
-  
+    <input type="submit" name="submit" value="Send Feedback" />
+  </form:form>
+
+
 </body>
 </html>

@@ -22,11 +22,14 @@
                 <value>com.monster.mgs.test.model</value>
             </list>
         </property>
+        <property name="namingStrategy" ref="namingStrategy" />
     </bean>
 
     <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="hibernateSessionFactory"/>
     </bean>
+
+    <bean id="namingStrategy" class="org.hibernate.cfg.ImprovedNamingStrategy" />
 
     <tx:annotation-driven transaction-manager="hibernateTransactionManager"/>
 

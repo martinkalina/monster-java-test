@@ -5,9 +5,9 @@ import com.monster.mgs.test.model.TrainingCourse;
 import java.util.Collection;
 
 
-public interface TrainingCourseDao {
+public interface CourseDao {
 
-    Collection<TrainingCourse> getAll();
+    Collection<TrainingCourse> findAll();
 
-    TrainingCourse get(Long id);
+    TrainingCourse findById(Long id);
 }

@@ -1,6 +1,5 @@
 package com.monster.mgs.test.dao;
 
-import com.monster.mgs.test.model.TrainingCourse;
 import com.monster.mgs.test.model.TrainingCourseSection;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +12,7 @@ import java.util.Collection;
 
 @Transactional
 @Repository
-public class CourseSectionDaoImpl implements CourseSectionDao {
+public class SectionDaoImpl implements SectionDao {
 
     @Autowired()
     private SessionFactory sessionFactory;
@@ -24,7 +23,7 @@ public class CourseSectionDaoImpl implements CourseSectionDao {
 
     }
 
-    public TrainingCourseSection get(Long id) {
+    public TrainingCourseSection findById(Long id) {
         Session session = sessionFactory.getCurrentSession();
         return (TrainingCourseSection) session.createCriteria(TrainingCourseSection.class).add(Restrictions.idEq(id)).uniqueResult();
     }
