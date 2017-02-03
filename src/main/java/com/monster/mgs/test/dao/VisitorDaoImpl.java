@@ -15,8 +15,8 @@ public class VisitorDaoImpl implements VisitorDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public void create(Visitor visitor) {
-        sessionFactory.getCurrentSession().save(visitor);
+    public void update(Visitor visitor) {
+        sessionFactory.getCurrentSession().update(visitor);
     }
 
     @Override

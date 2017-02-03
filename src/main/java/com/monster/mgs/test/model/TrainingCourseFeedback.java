@@ -16,15 +16,15 @@ public class TrainingCourseFeedback {
     private String comment;
     private int rating;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name="FAVORITE_SECTION_ID")
     private TrainingCourseSection favoriteSection;
 
-    @ManyToOne()
+    @ManyToOne(optional = false)
     @JoinColumn(name="TRAINING_COURSE_ID")
     private TrainingCourse course;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name="VISITOR_ID")
     private Visitor visitor = new Visitor();
 

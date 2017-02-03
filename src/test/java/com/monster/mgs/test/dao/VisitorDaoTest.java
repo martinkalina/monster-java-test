@@ -1,5 +1,7 @@
 package com.monster.mgs.test.dao;
 
+import com.monster.mgs.test.TestUtils;
+import com.monster.mgs.test.model.TrainingCourseFeedback;
 import com.monster.mgs.test.model.Visitor;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -18,25 +20,22 @@ public class VisitorDaoTest extends AbstractTransactionalJUnit4SpringContextTest
 
     @Autowired
     private VisitorDao visitorDao;
-    private Visitor visitor;
 
-    @Before
-    public void setUp() throws Exception {
-        visitor = new Visitor();
-        visitor.setFirstName("John");
-        visitor.setLastName("Doe");
-        visitor.setEmailAddress("aa@bb.cz");
-    }
+    @Autowired
+    private SectionDao sectionDao;
 
-    @Test
-    public void testCreate() throws Exception {
-        visitorDao.create(visitor);
-        Assert.assertNotNull(visitor.getId());
-    }
+    @Autowired
+    private CourseDao courseDao;
+
+    @Autowired
+    private FeedbackDao feedbackDao;
+
 
     @Test
     public void testFindByEmail() throws Exception {
-        visitorDao.create(visitor);
+        final TrainingCourseFeedback testFeedback = TestUtils.createTestFeedback(sectionDao, courseDao);
+        feedbackDao.create(testFeedback);
+        final Visitor visitor = testFeedback.getVisitor();
         final Visitor visitor1 = visitorDao.findByEmail(visitor.getEmailAddress());
         Assert.assertThat(visitor1, Matchers.samePropertyValuesAs(visitor));
     }

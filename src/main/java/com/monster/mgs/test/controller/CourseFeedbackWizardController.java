@@ -1,11 +1,11 @@
 package com.monster.mgs.test.controller;
 
-import com.monster.mgs.test.dao.FeedbackDao;
-import com.monster.mgs.test.dao.SectionDao;
 import com.monster.mgs.test.dao.CourseDao;
+import com.monster.mgs.test.dao.SectionDao;
 import com.monster.mgs.test.model.TrainingCourse;
 import com.monster.mgs.test.model.TrainingCourseFeedback;
 import com.monster.mgs.test.model.TrainingCourseSection;
+import com.monster.mgs.test.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,11 @@ import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Controller
 
+/**
+ * MVC controller for the main Wizard of the application.
+ */
+@Controller
 @SessionAttributes({"feedback"})
 public class CourseFeedbackWizardController {
 
@@ -32,7 +35,8 @@ public class CourseFeedbackWizardController {
     private SectionDao sectionDao;
 
     @Autowired
-    private FeedbackDao feedbackDao;
+    private FeedbackService feedbackService;
+
 
     @ModelAttribute("feedback")
     public TrainingCourseFeedback createFeedback() {
@@ -84,7 +88,8 @@ public class CourseFeedbackWizardController {
         if (isBack(submit)) {
             return prepare2(feedback);
         }
-        // send
+
+        feedbackService.send(feedback);
 
         sessionStatus.setComplete();
         return createModelAndViewFor(feedback, "index");
