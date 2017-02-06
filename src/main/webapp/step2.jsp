@@ -1,23 +1,24 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <body>
-  <h1>Training Course Feedback Form</h1>
-  <p>Please help us to improve our class by completing this form.</p>
+<h1><spring:message key="form.header"/></h1>
+<p><spring:message key="form.text"/></p>
 
-  <form:form action="submit2"  commandName="feedback">
+<form:form action="submit2" commandName="feedback">
     <dl>
-      <dt>Favorite Section:</dt>
-      <dd><form:select path="favoriteSection" items="${sections}" itemLabel="name" itemValue="id"/></dd>
-      <dt>Please rate the training:</dt>
-      <dd><form:radiobuttons path="rating" items="${ratings}" /></dd>
+        <dt><spring:message key="favorite.section"/></dt>
+        <dd><form:select path="favoriteSection" items="${sections}" itemLabel="name" itemValue="id"/></dd>
+        <dt><spring:message key="rate.training"/></dt>
+        <dd><form:radiobuttons path="rating" items="${ratings}"/></dd>
 
-      <dt>Please share with us your comments on how we can improve this class for future:</dt>
-      <dd><form:textarea path="comment" rows="6" cols="40"/></dd>
+        <dt><spring:message key="training.comments"/></dt>
+        <dd><form:textarea path="comment" rows="6" cols="40"/></dd>
     </dl>
-    <input type="submit" name="submit" value="&lt; Back" />
-    <input type="submit" name="submit" value="Continue &gt;" />
-  </form:form>
-  
+    <input type="submit" name="submit" value="<spring:message key="btn.back" />"/>
+    <input type="submit" name="submit" value="<spring:message key="btn.continue" />"/>
+</form:form>
+
 </body>
 </html>

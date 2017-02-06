@@ -8,7 +8,6 @@ import com.monster.mgs.test.model.TrainingCourseSection;
 import com.monster.mgs.test.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -20,7 +19,6 @@ import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -48,12 +46,14 @@ public class CourseFeedbackWizardController {
         return new TrainingCourseFeedback();
     }
 
-    @RequestMapping("/init")
-    public ModelAndView init(@ModelAttribute("feedback") TrainingCourseFeedback feedback) {
-        return prepare1(feedback);
+    @RequestMapping("/")
+    public String index() {
+        return "home";
+
     }
 
-    private ModelAndView prepare1(TrainingCourseFeedback feedback) {
+    @RequestMapping("/init")
+    public ModelAndView prepare1(@ModelAttribute("feedback") TrainingCourseFeedback feedback) {
         return createModelAndViewFor(feedback, "step1")
                 .addObject("courses", courseDao.findAll());
     }
@@ -66,10 +66,11 @@ public class CourseFeedbackWizardController {
                                 ) {
         if (isBack(submit)) {
             sessionStatus.setComplete();
-            return createModelAndViewFor(feedback, "index");
+            return createModelAndViewFor(feedback, "home");
         }
         if (bindingResult.hasErrors()){
-            return prepare1(feedback);
+            return createModelAndViewFor(feedback, "step1")
+                    .addObject("courses", courseDao.findAll());
         }
 
 
@@ -87,7 +88,11 @@ public class CourseFeedbackWizardController {
                                 @RequestParam() String submit,
                                 BindingResult bindingResult) {
         if (isBack(submit)) {
-            return prepare1(feedback);
+            return createModelAndViewFor(feedback, "step1")
+                    .addObject("courses", courseDao.findAll());
+        }
+        if (bindingResult.hasErrors()){
+            return prepare2(feedback);
         }
 
         return createModelAndViewFor(feedback, "step3");
@@ -102,9 +107,13 @@ public class CourseFeedbackWizardController {
         }
 
         feedbackService.send(feedback);
-
         sessionStatus.setComplete();
-        return createModelAndViewFor(feedback, "index");
+        return createModelAndViewFor(feedback, "redirect:/success");
+    }
+
+    @RequestMapping("/success")
+    public String success(){
+        return "success1";
     }
 
     private ModelAndView createModelAndViewFor(@ModelAttribute("feedback") TrainingCourseFeedback feedback, String step) {

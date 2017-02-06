@@ -20,7 +20,7 @@ public class TestUtils {
         feedback.setVisitor(visitor);
         feedback.setComment("No Comment");
         feedback.setRating(1);
-        feedback.setDate(new Date());
+        feedback.setDate(new Date(System.currentTimeMillis() - 24 * 3600 * 1000));
         feedback.setFavoriteSection(sectionDao.findByCourseId(course.getId()).iterator().next());
         return feedback;
     }

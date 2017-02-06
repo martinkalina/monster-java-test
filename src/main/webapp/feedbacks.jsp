@@ -1,8 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <body>
-    <h1>Existing Feedbacks</h1>
+    <h1><spring:message key="existing.feedbacks" /></h1>
     <c:choose>
         <c:when test="${not empty feedbacks}" >
             <table>
@@ -27,10 +28,10 @@
             </table>
         </c:when>
         <c:otherwise>
-            <p>No feedbacks so far.</p>
+            <p><spring:message key="no.feedbacks" /></p>
         </c:otherwise>
 
     </c:choose>
-    <button onclick="location.href='index.jsp'">&lt; Back</button>
+    <button onclick="location.href='/'"><spring:message key="btn.back" /></button>
 </body>
 </html>

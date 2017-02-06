@@ -1,23 +1,16 @@
 package com.monster.mgs.test.dao;
 
 import com.monster.mgs.test.TestUtils;
-import com.monster.mgs.test.model.TrainingCourse;
 import com.monster.mgs.test.model.TrainingCourseFeedback;
-import com.monster.mgs.test.model.Visitor;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
-import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link FeedbackDao}

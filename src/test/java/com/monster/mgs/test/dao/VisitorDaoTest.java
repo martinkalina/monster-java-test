@@ -5,7 +5,6 @@ import com.monster.mgs.test.model.TrainingCourseFeedback;
 import com.monster.mgs.test.model.Visitor;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

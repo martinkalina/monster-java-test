@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.util.Date;
 import java.util.Objects;
 
@@ -17,8 +18,10 @@ public class TrainingCourseFeedback {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "TRAINING_COURSE_FEEDBACK_ID")
     private Long id;
+
     @NotNull
     @DateTimeFormat(pattern = CourseFeedbackWizardController.DATE_PATTERN)
+    @Past
     @Column(name = "TRAINING_COURSE_DATE")
     private Date date;
     private String comment;
