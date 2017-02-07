@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -27,9 +28,6 @@ public class FeedbackDaoTest extends AbstractTransactionalJUnit4SpringContextTes
   @Autowired
   private SectionDao sectionDao;
 
-  @Autowired
-  private VisitorDao visitorDao;
-
 
 
   @Test
@@ -48,8 +46,10 @@ public class FeedbackDaoTest extends AbstractTransactionalJUnit4SpringContextTes
     feedbackDao.create(feedback1);
 
     final List<TrainingCourseFeedback> all = feedbackDao.findAll();
-    assertEquals(all.get(0), feedback0);
-    assertEquals(all.get(1), feedback1);
+    final ArrayList<Object> expected = new ArrayList<>();
+    expected.add(feedback0);
+    expected.add(feedback1);
+    assertEquals(expected, all);
 
   }
 }

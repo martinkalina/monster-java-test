@@ -3,7 +3,6 @@ package com.monster.mgs.test.service;
 import com.monster.mgs.test.TestUtils;
 import com.monster.mgs.test.dao.CourseDao;
 import com.monster.mgs.test.dao.SectionDao;
-import com.monster.mgs.test.dao.VisitorDao;
 import com.monster.mgs.test.model.TrainingCourseFeedback;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,9 +24,6 @@ public class FeedbackServiceTest extends AbstractJUnit4SpringContextTests {
 
     @Autowired
     private SectionDao sectionDao;
-
-    @Autowired
-    private VisitorDao visitorDao;
 
 
     @Test

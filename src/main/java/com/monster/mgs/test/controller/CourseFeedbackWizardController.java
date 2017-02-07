@@ -89,8 +89,7 @@ public class CourseFeedbackWizardController {
 
     @RequestMapping("/submit2")
     public ModelAndView submit2(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
-                                @RequestParam() String submit,
-                                BindingResult bindingResult) {
+                                BindingResult bindingResult, @RequestParam() String submit) {
         if (isBack(submit)) {
             return createModelAndViewFor(feedback, "step1")
                     .addObject("courses", courseDao.findAll());
