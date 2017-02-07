@@ -22,11 +22,6 @@
                 <value>com.monster.mgs.test.model</value>
             </list>
         </property>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.show_sql">true</prop>
-            </props>
-        </property>
         <property name="namingStrategy" ref="namingStrategy"/>
     </bean>
 

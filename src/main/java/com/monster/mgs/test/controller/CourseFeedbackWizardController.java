@@ -6,6 +6,8 @@ import com.monster.mgs.test.model.TrainingCourse;
 import com.monster.mgs.test.model.TrainingCourseFeedback;
 import com.monster.mgs.test.model.TrainingCourseSection;
 import com.monster.mgs.test.service.FeedbackService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ import java.util.Date;
 @Controller
 @SessionAttributes({"feedback"})
 public class CourseFeedbackWizardController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CourseFeedbackWizardController.class);
 
     public static final String DATE_PATTERN = "dd.MM.yyyy";
 
@@ -116,8 +120,9 @@ public class CourseFeedbackWizardController {
         return "success1";
     }
 
-    private ModelAndView createModelAndViewFor(@ModelAttribute("feedback") TrainingCourseFeedback feedback, String step) {
-        return new ModelAndView(step, "feedback", feedback);
+    private ModelAndView createModelAndViewFor(@ModelAttribute("feedback") TrainingCourseFeedback feedback, String viewName) {
+        LOG.debug("Preparing view:" + viewName);
+        return new ModelAndView(viewName, "feedback", feedback);
     }
 
     private boolean isBack(@RequestParam() String submit) {
@@ -133,6 +138,7 @@ public class CourseFeedbackWizardController {
         binder.registerCustomEditor(TrainingCourse.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
+
                 TrainingCourse course = courseDao.findById(Long.valueOf(text));
                 setValue(course);
             }

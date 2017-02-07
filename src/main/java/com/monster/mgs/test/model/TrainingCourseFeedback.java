@@ -110,4 +110,17 @@ public class TrainingCourseFeedback {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Override
+    public String toString() {
+        return "TrainingCourseFeedback{" +
+                "id=" + id +
+                ", date=" + date +
+                ", comment='" + comment + '\'' +
+                ", rating=" + rating +
+                ", favoriteSection=" + favoriteSection +
+                ", course=" + course +
+                ", visitor=" + visitor +
+                '}';
+    }
 }
