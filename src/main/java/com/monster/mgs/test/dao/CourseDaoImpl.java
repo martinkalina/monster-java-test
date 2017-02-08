@@ -1,6 +1,5 @@
 package com.monster.mgs.test.dao;
 
-import com.monster.mgs.test.controller.CourseFeedbackWizardController;
 import com.monster.mgs.test.model.TrainingCourse;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

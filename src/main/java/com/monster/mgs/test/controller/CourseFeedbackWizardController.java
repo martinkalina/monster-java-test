@@ -6,8 +6,6 @@ import com.monster.mgs.test.model.TrainingCourse;
 import com.monster.mgs.test.model.TrainingCourseFeedback;
 import com.monster.mgs.test.model.TrainingCourseSection;
 import com.monster.mgs.test.service.FeedbackService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -15,11 +13,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 
@@ -30,9 +28,8 @@ import java.util.Date;
 @SessionAttributes({"feedback"})
 public class CourseFeedbackWizardController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CourseFeedbackWizardController.class);
-
     public static final String DATE_PATTERN = "dd.MM.yyyy";
+    public static final Integer[] RATINGS = {1, 2, 3, 4, 5};
 
     @Autowired
     private CourseDao courseDao;
@@ -44,90 +41,105 @@ public class CourseFeedbackWizardController {
     private FeedbackService feedbackService;
 
 
+    /**
+     * Initializer of feedback model bean.
+     */
     @ModelAttribute("feedback")
     @Valid
     public TrainingCourseFeedback createFeedback() {
         return new TrainingCourseFeedback();
     }
 
-    @RequestMapping("/")
-    public String index() {
-        return "home";
 
+    /**
+     * @return reference data courses
+     */
+    @ModelAttribute("courses")
+    public Collection<TrainingCourse> getCourses() {
+        return courseDao.findAll();
+    }
+
+    /**
+     * @param feedback
+     * @return sections for selected course
+     */
+    @ModelAttribute("sections")
+    public Collection<TrainingCourseSection> getSections(@ModelAttribute("feedback") TrainingCourseFeedback feedback) {
+        if (feedback.getCourse() == null) {
+            return null;
+        }
+        return sectionDao.findByCourseId(feedback.getCourse().getId());
+    }
+
+    /**
+     * @return reference data for ratings.
+     */
+    @ModelAttribute("ratings")
+    public Integer[] getRatings() {
+        return RATINGS;
     }
 
     @RequestMapping("/init")
-    public ModelAndView prepare1(@ModelAttribute("feedback") TrainingCourseFeedback feedback) {
-        return createModelAndViewFor(feedback, "step1")
-                .addObject("courses", courseDao.findAll());
+    public String prepare1(@ModelAttribute("feedback") TrainingCourseFeedback feedback) {
+        return "step1";
     }
 
     @RequestMapping("/submit1")
-    public ModelAndView submit1(@Valid @ModelAttribute("feedback") TrainingCourseFeedback feedback,
-                                BindingResult bindingResult,
-                                @RequestParam() String submit,
-                                SessionStatus sessionStatus
-                                ) {
+    public String submit1(@Valid @ModelAttribute("feedback") TrainingCourseFeedback feedback,
+                          BindingResult bindingResult,
+                          @RequestParam() String submit,
+                          SessionStatus sessionStatus) {
         if (isBack(submit)) {
             sessionStatus.setComplete();
-            return createModelAndViewFor(feedback, "home");
+            return "home";
         }
-        if (bindingResult.hasErrors()){
-            return createModelAndViewFor(feedback, "step1")
-                    .addObject("courses", courseDao.findAll());
+        if (bindingResult.hasErrors()) {
+            return "step1";
         }
-
-
-        return prepare2(feedback);
+        return "step2";
     }
 
-    private ModelAndView prepare2(TrainingCourseFeedback feedback) {
-        return createModelAndViewFor(feedback, "step2")
-                .addObject("sections", sectionDao.findByCourseId(feedback.getCourse().getId()))
-                .addObject("ratings", new Integer[]{1, 2, 3, 4, 5});
-    }
 
     @RequestMapping("/submit2")
-    public ModelAndView submit2(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
-                                BindingResult bindingResult, @RequestParam() String submit) {
+    public String submit2(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
+                          BindingResult bindingResult, @RequestParam() String submit) {
         if (isBack(submit)) {
-            return createModelAndViewFor(feedback, "step1")
-                    .addObject("courses", courseDao.findAll());
+            return "step1";
         }
-        if (bindingResult.hasErrors()){
-            return prepare2(feedback);
+        if (bindingResult.hasErrors()) {
+            return "step2";
         }
 
-        return createModelAndViewFor(feedback, "step3");
+        return "step3";
     }
 
     @RequestMapping("/submit3")
-    public ModelAndView submit3(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
-                                @RequestParam() String submit,
-                                SessionStatus sessionStatus) {
+    public String submit3(@ModelAttribute("feedback") TrainingCourseFeedback feedback,
+                          @RequestParam() String submit,
+                          SessionStatus sessionStatus) {
         if (isBack(submit)) {
-            return prepare2(feedback);
+            return "step2";
         }
 
         feedbackService.send(feedback);
         sessionStatus.setComplete();
-        return createModelAndViewFor(feedback, "redirect:/success");
+        return "redirect:/success";
     }
 
     @RequestMapping("/success")
-    public String success(){
+    public String success() {
         return "success1";
-    }
-
-    private ModelAndView createModelAndViewFor(@ModelAttribute("feedback") TrainingCourseFeedback feedback, String viewName) {
-        LOG.debug("Preparing view:" + viewName);
-        return new ModelAndView(viewName, "feedback", feedback);
     }
 
     private boolean isBack(@RequestParam() String submit) {
         return submit.equals("< Back");
     }
 
+
+    /**
+     * Binder for reference data.
+     * @param binder
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);

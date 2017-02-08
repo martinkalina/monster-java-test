@@ -4,25 +4,35 @@ import com.monster.mgs.test.model.TrainingCourseFeedback;
 import com.monster.mgs.test.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
 /**
- * Feedbacks List page controller.
+ * MVC controller for the homepage and feedback list.
  */
 @Controller
-public class FeedbackListController {
+public class CourseFeedbackController {
 
 
     @Autowired
     private FeedbackService feedbackService;
 
+
+    @RequestMapping("/")
+    public String index() {
+        return "home";
+    }
+
+    @ModelAttribute("feedbacks")
+    public List<TrainingCourseFeedback>  getFeedbacks(){
+        return feedbackService.list();
+    }
+
     @RequestMapping("/list")
-    public ModelAndView list() {
-        final List<TrainingCourseFeedback> list = feedbackService.list();
-        return new ModelAndView("feedbacks", "feedbacks", list);
+    public String list() {
+        return "feedbacks";
 
     }
 }

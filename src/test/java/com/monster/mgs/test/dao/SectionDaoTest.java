@@ -21,24 +21,24 @@ public class SectionDaoTest extends AbstractTransactionalJUnit4SpringContextTest
 
     @Test
     public void findById_existing()  {
-        final TrainingCourseSection byId = sectionDao.findById(1l);
+        final TrainingCourseSection byId = sectionDao.findById(1L);
         assertThat(byId, is(notNullValue()));
     }
     @Test
     public void findById_nonexisting()  {
-        final TrainingCourseSection byId = sectionDao.findById(100l);
+        final TrainingCourseSection byId = sectionDao.findById(100L);
         assertThat(byId, is(nullValue()));
     }
 
 
     @Test
     public void findByCourseId_existing()  {
-        final Collection<TrainingCourseSection> byCourseId = sectionDao.findByCourseId(1l);
+        final Collection<TrainingCourseSection> byCourseId = sectionDao.findByCourseId(1L);
         assertThat(byCourseId, is(not(empty())));
     }
     @Test
     public void findByCourseId_nonexisting()  {
-        final Collection<TrainingCourseSection> byCourseId = sectionDao.findByCourseId(100l);
+        final Collection<TrainingCourseSection> byCourseId = sectionDao.findByCourseId(100L);
         assertThat(byCourseId, is(empty()));
     }
 }

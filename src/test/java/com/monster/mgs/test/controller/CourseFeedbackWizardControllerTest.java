@@ -48,24 +48,23 @@ public class CourseFeedbackWizardControllerTest extends AbstractTransactionalJUn
     @Test
     public void testWizard() throws Exception {
 
-        mockMvc.perform(get("/"))
+        // because some problems with session attribute feedback,
+        // the only way to test wizard controller is in one method
+        TrainingCourseFeedback feedback = TestUtils.createTestFeedback(sectionDao, courseDao);
+        final HashMap sessionAttributes = new HashMap();
+        sessionAttributes.put("feedback", feedback);
+
+        mockMvc.perform(get("/").sessionAttrs(sessionAttributes))
                 .andExpect(status().isOk())
                 .andExpect(view().name("home"));
 
 
-        mockMvc.perform(get("/init"))
+        mockMvc.perform(get("/init").sessionAttrs(sessionAttributes))
                 .andExpect(status().isOk())
                 .andExpect(view().name("step1"))
                 .andExpect(model().attribute("courses", is(not(empty()))));
 
 
-
-        // because some problems with session attribute feedback,
-        // the only way to test wizard controller is in one method
-        TrainingCourseFeedback feedback = TestUtils.createTestFeedback(sectionDao, courseDao);
-
-        final HashMap sessionAttributes = new HashMap();
-        sessionAttributes.put("feedback", feedback);
         MockHttpServletRequestBuilder postBuilder = post("/submit1")
                 .sessionAttrs(sessionAttributes);
         mockMvc.perform(

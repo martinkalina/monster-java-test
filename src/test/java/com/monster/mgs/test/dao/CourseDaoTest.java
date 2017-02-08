@@ -24,12 +24,12 @@ public class CourseDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 
     @Test
     public void findById_existing(){
-        final TrainingCourse byId = courseDao.findById(1l);
+        final TrainingCourse byId = courseDao.findById(1L);
         Assert.assertThat(byId, is(notNullValue()));
     }
     @Test
     public void findById_nonexisting(){
-        final TrainingCourse byId = courseDao.findById(10l);
+        final TrainingCourse byId = courseDao.findById(10L);
         Assert.assertThat(byId, is(nullValue()));
     }
 
